@@ -33,19 +33,24 @@ function maze(){
         newRow.style.height = "24px";
         maze.appendChild(newRow);
     }
-    depthfirstSearch(0, 1264);  
+    let start = 0;
+    let end = 1264;
+    document.getElementById(start).style.backgroundColor = "green";
+    document.getElementById(end).style.backgroundColor = "red";
+    depthfirstSearch(start, end);  
 }
 
 function depthfirstSearch(start, end){
-    if(start == end){ document.getElementById(end).style.backgroundColor = "blue"; return true;}
+    if(start == end)return true;
     array[start] = 1;
     let size = neighbours[start].length;
-    if(start == 1263){
-        console.log(array[1264].length);
-    }
     for(let i = 0; i<size; i++){
         let temp = neighbours[start][i];
-        if(array[temp] == 0 && depthfirstSearch(temp, end))return true;
+        if(array[temp] == 0 && depthfirstSearch(temp, end) == true){
+            if(temp != end)
+                document.getElementById(temp).style.backgroundColor = "yellow";
+            return true;
+        }
     }
     return false;
 }
