@@ -38,7 +38,7 @@ function maze(){
         maze.appendChild(newRow);
     }
     let start = 0;
-    let end = 1264;
+    let end = 1000;
     document.getElementById(start).style.backgroundColor = "green";
     document.getElementById(end).style.backgroundColor = "red";
     //depthfirstSearch(start, end); 
@@ -134,7 +134,8 @@ function dijkstra(start, end){
     distanceFromSource[start] = 0;
     while(true){
         let temp = queue[index];
-        if(temp == end)break;
+        if(temp == end)break;//at last we have to remove this condition and let it traverse it till the end
+        //and then find the path from this point to the first point
         index++;
         for(let i = 0; i<neighbours[temp].length; i++){
             if(array[neighbours[temp][i]] == 0){
@@ -152,6 +153,7 @@ function dijkstra(start, end){
             if(distanceFromSource[neighbours[temp][i]] > distanceFromSource[temp]){
                 distanceFromSource[neighbours[temp][i]] = distanceFromSource[temp] + 1;
                 prev[neighbours[temp][i]] = temp;
+                console.log("hello");
             }
         }
     }
