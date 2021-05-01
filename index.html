@@ -6,15 +6,16 @@
     <title>Document</title>
     <link rel="stylesheet" href="index.css"> 
 </head>
-<body onload="maze()">
+<body>
     <div id="nav bar">
-        
+        <button id="buttonDFS">dfs</button>
+        <button id="buttonBFS" onclick="buttonBFS()">bfs</button>
+        <button id="buttonDijkstra" onclick="buttonDijkstra()">dijkstra</button>
     </div>
     <div class="board" id="board">
-        <table class="maze" id="maze">
-
+        <table class="maze" id="maze"> 
         </table>
     </div>
-    <script src="index.js"></script>
+    <script src="dist/bundle.js"></script>
 </body>
 </html>

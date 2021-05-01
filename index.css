@@ -5,6 +5,7 @@ table{
     width: max-content;
     position:relative;
     display: block;
+    margin-left: 20px;
 } 
 
 td,tr{
