@@ -1,13 +1,67 @@
+#board{
+    width: 100%;
+}
+
+.main{
+    overflow-x:auto;
+}
+
 table{
     border-collapse: collapse;
     border-spacing: 0;
-    border: 0.5px solid black;
-    width: max-content;
-    position:relative;
     display: block;
-    margin-left: 20px;
-} 
+    margin-top: 20px;
+}
+
+nav-link:hover{
+    background-color: #96a3a0;
+    border-radius: 5px;
+}
+
+.nav-item[disabled]{
+ background-color: #96a3a0;
+}
+.navb{
+    padding: 10px;
+}
+.navb:hover{
+    background-color: #96a3a0;
+    text-decoration: none;
+    color: black;
+}
+
+#speedLable:hover{
+   text-decoration: none;
+
+}
+
+#buttonClearScreen{
+    position:fixed;
+    right:10px;
+    background-color: rgb(172, 38, 38);
+    border-radius: 2px;
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
+}
 
 td,tr{
-    border: 0.5px solid black;
+    text-align: center;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    border: 0.5px solid #96a3a0;
+    height: 24px;
+    width: 24px;
+}
+
+.navb{
+    display: block;
+    padding-left: 20px;
+    color: black;
+
+}
+
+.destinationSymbol{
+    color: black;
 }

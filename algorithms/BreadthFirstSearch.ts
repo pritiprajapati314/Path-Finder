@@ -1,5 +1,5 @@
 import Board from '../Board';
-import Painter from '../utilities/Painter';
+import Painter from '../utilities/Painter'
 import Node from '../utilities/nodes';
 
 
@@ -12,15 +12,16 @@ class BreadthFirstSearch{
     row: number;
     column: number;
     nodes: Node[];
-    painter: Painter
+    board: Board;
+    painter: Painter;
     
-    constructor(start:number, end:number, column:number, row:number, neighbours: Node[]){
+    constructor(start:number, end:number, column:number, row:number, neighbours: Node[], painter: Painter){
         this.start = start;
         this.end = end;
         this.column = column;
         this.row = row;
         this.nodes = neighbours;
-        this.painter = new Painter();
+        this.painter = painter;
     }
 
     async bfs(){
@@ -30,7 +31,7 @@ class BreadthFirstSearch{
         this.nodes[this.start].visited = true;
       
         this.nodes[this.start].parent = null;
-        
+        await this.painter.paintOneNode(this.start.toString(), 2);
         while(true){
             let t = this.nodes[queue[index]];
         
@@ -53,16 +54,20 @@ class BreadthFirstSearch{
                 }
             }
             if(flag)break;
-            
+
         }
-        let temp = this.nodes[this.end].parent;
         let path = [];
+        path.push(this.end);
+        let temp = this.nodes[this.end].parent;
         while(temp != this.start.toString()){
             path.push(temp);
-            await this.painter.paintOneNode(temp, 3);
             temp = this.nodes[temp].parent;
-            
         }
+        path.push(this.start);
+
+        path.reverse();
+        for(let i = 0; i<path.length; i++)
+            await this.painter.paintOneNode(path[i], 3);
     }
 }
 

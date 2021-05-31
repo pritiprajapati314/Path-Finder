@@ -9,15 +9,16 @@ class DepthFirstSearch{
     row: number;
     column: number;
     node: Node[];
+    board:Board;
     painter: Painter
 
-    constructor(start:number, end:number, column:number, row:number, neighbours:Node[]){
+    constructor(start:number, end:number, column:number, row:number, neighbours:Node[], painter: Painter){
         this.start = start;
         this.end = end;
         this.row = row;
         this.column = column;
         this.node = neighbours;
-        this.painter = new Painter();
+        this.painter = painter;
     }
     async initialiseDFS(){
         let array = [];
@@ -25,16 +26,19 @@ class DepthFirstSearch{
 
         
         array.reverse();
-        for(let i = 1; i<array.length-1; i++){
+        await this.painter.paintOneNode(this.start.toString(),3);
+        for(let i = 0; i<array.length-1; i++){
             await this.painter.paintOneNode(array[i].toString(), 3);
         }
+        await this.painter.paintOneNode(this.end.toString(),3);
     }
     async DFS(current:number, start:number, end:number, array: any[]){
-        if(current == end)return true;
+        if(current == end){
+            this.painter.paintOneNode(current.toString(),2);
+            return true;
+        }
         this.node[current].visited = true;
-        
-        if(current != start)
-            await this.painter.paintOneNode(current.toString(), 2);
+        await this.painter.paintOneNode(current.toString(), 2);
 
         for(let i = 0; i<this.node[current].neighbours.length; i++){
             let temp = this.node[current].neighbours[i];
