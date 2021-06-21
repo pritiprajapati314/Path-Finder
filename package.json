@@ -1,0 +1,35 @@
+{
+  "name": "pathfinder",
+  "version": "1.0.0",
+  "description": "path finder",
+  "main": "App.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pritiprajapati314/my-path-finder.git"
+  },
+  "author": "priti prajapati",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pritiprajapati314/my-path-finder/issues"
+  },
+  "homepage": "https://github.com/pritiprajapati314/my-path-finder#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
+    "eslint": "^7.23.0",
+    "eslint-plugin-vue": "^7.8.0",
+    "ts-loader": "^8.0.3",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
+  "dependencies": {
+    "@types/jquery": "^3.5.4",
+    "@types/node": "^14.11.2",
+    "jquery": "^3.5.1",
+    "package.json": "^2.0.1",
+    "typescript": "^4.0.3"
+  }
+}
