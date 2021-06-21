@@ -19,30 +19,35 @@ let speed = document.getElementById("speedSlider") as HTMLInputElement;
 
 
 speed.oninput = () =>{
+    console.log("no");
     board.painter.speedSelection(100/Math.floor(parseInt(speed.value)));
 }
 
-let algorithmNumber = 0;
+board.algorithmID = 0;
+    console.log("idea");
 buttonBFS.onclick = () => {
-    algorithmNumber = 1;
+    board.algorithmID = 1;
     buttonFindPath.innerHTML = "Breadth First Search";
    
 }
 
 buttonDFS.onclick = ()=>{
-    algorithmNumber = 2;
+    board.algorithmID = 2;
     buttonFindPath.innerHTML = "Depth First Search";
    
 }
 
 buttonDijkstra.onclick = () =>{
-    algorithmNumber = 3;
+    board.algorithmID = 3;
     buttonFindPath.innerHTML = "Dijkstra";
     
 }
 
 buttonFindPath.onclick = () =>{
-    switch(algorithmNumber){
+    console.log("i");
+    board.firstClick = true;
+    board.clearPath();
+    switch(board.algorithmID){
         case 1:
             board.runBFS();
             break;
@@ -53,7 +58,7 @@ buttonFindPath.onclick = () =>{
             board.runDijkstra();
             break;
         default:
-            console.log("error");
+            alert("Please chose an algorithm first");
     }
 }
 

@@ -1,6 +1,6 @@
 import Board from '../Board';
 import Painter from '../utilities/Painter'
-import Node from '../utilities/nodes';
+import Node from '../utilities/Nodes';
 
 
 // class name PascalCase
@@ -14,6 +14,9 @@ class BreadthFirstSearch{
     nodes: Node[];
     board: Board;
     painter: Painter;
+
+
+    algorithId: number;
     
     constructor(start:number, end:number, column:number, row:number, neighbours: Node[], painter: Painter){
         this.start = start;
@@ -68,6 +71,52 @@ class BreadthFirstSearch{
         path.reverse();
         for(let i = 0; i<path.length; i++)
             await this.painter.paintOneNode(path[i], 3);
+    }
+
+
+    async fastbfs(){
+        let queue = [];
+        let index = 0;
+        queue.push(this.start);
+        this.nodes[this.start].visited = true;
+        this.nodes[this.start].parent = null;
+        this.painter.paintOneNode(this.start.toString(), 2);
+        while(true){
+            let t = this.nodes[queue[index]];
+        
+            let flag = false;
+            index++;
+            for(let i = 0; i<this.nodes[t.nodeId].neighbours.length; i++){
+                if(this.nodes[this.nodes[t.nodeId].neighbours[i]].nodeId == this.end.toString()){
+                    this.nodes[this.end].parent = t.nodeId;
+                    flag = true;
+                    break;
+                }
+
+                if(!this.nodes[this.nodes[t.nodeId].neighbours[i]].visited && !this.nodes[this.nodes[t.nodeId].neighbours[i]].isWall){
+
+                    this.painter.paintOneNode(this.nodes[t.nodeId].neighbours[i].toString(), 2);
+
+                    queue.push(this.nodes[t.nodeId].neighbours[i]);
+                    this.nodes[this.nodes[t.nodeId].neighbours[i]].visited = true;
+                    this.nodes[this.nodes[t.nodeId].neighbours[i]].parent = t.nodeId;
+                }
+            }
+            if(flag)break;
+
+        }
+        let path = [];
+        path.push(this.end);
+        let temp = this.nodes[this.end].parent;
+        while(temp != this.start.toString()){
+            path.push(temp);
+            temp = this.nodes[temp].parent;
+        }
+        path.push(this.start);
+
+        path.reverse();
+        for(let i = 0; i<path.length; i++)
+            this.painter.paintOneNode(path[i], 3);
     }
 }
 

@@ -1,7 +1,7 @@
 import { timers } from 'jquery';
 import Board from '../Board';
 import Painter from '../utilities/Painter';
-import Node from '../utilities/nodes'
+import Node from '../utilities/Nodes'
 
 class DepthFirstSearch{
     start: number;
@@ -42,7 +42,38 @@ class DepthFirstSearch{
 
         for(let i = 0; i<this.node[current].neighbours.length; i++){
             let temp = this.node[current].neighbours[i];
-            if(!this.node[this.node[current].neighbours[i]].visited && !this.node[this.node[current].neighbours[i]].isWall && await this.DFS(temp, start, end, array) == true){
+            if(!this.node[this.node[current].neighbours[i]].visited && (!this.node[this.node[current].neighbours[i]].isWall || this.node[this.node[current].neighbours[i]].isSource || this.node[this.node[current].neighbours[i]].isDestination) && await this.DFS(temp, start, end, array) == true){
+                array.push(temp);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    async fastInitialiseDFS(){
+        let array = [];
+        this.fastDFS(this.start, this.start, this.end, array);
+
+        
+        array.reverse();
+        this.painter.paintOneNode(this.start.toString(),3);
+        for(let i = 0; i<array.length-1; i++){
+            this.painter.paintOneNode(array[i].toString(), 3);
+        }
+        this.painter.paintOneNode(this.end.toString(),3);
+    }
+        fastDFS(current:number, start:number, end:number, array: any[]){
+        if(current == end){
+            this.painter.paintOneNode(current.toString(),2);
+            return true;
+        }
+        this.node[current].visited = true;
+        this.painter.paintOneNode(current.toString(), 2);
+
+        for(let i = 0; i<this.node[current].neighbours.length; i++){
+            let temp = this.node[current].neighbours[i];
+            if(!this.node[this.node[current].neighbours[i]].visited && !this.node[this.node[current].neighbours[i]].isWall && this.fastDFS(temp, start, end, array) == true){
                 array.push(temp);
                 return true;
             }

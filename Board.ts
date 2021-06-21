@@ -1,5 +1,5 @@
 import { domainToUnicode } from 'node:url';
-import Node from './utilities/nodes'
+import Node from './utilities/Nodes'
 import BreadthFirstSearch from './algorithms/BreadthFirstSearch';
 import DepthFirstSearch from './algorithms/DepthFirstSearch';
 import Dijkstra from './algorithms/Dijkstra';
@@ -7,9 +7,10 @@ import Painter from './utilities/Painter';
 import Recursive_Horizontal from './maze/Rhorizontal';
 import Recursive_Vertical from './maze/RVertical'
 import Recursive from './maze/Recursive';
-import Random from './maze/random';
+import Random from './maze/Random';
+import Reset from './utilities/Reset';
 import { randomBytes } from 'node:crypto';
-
+import { textChangeRangeIsUnchanged } from 'typescript';
 
 
 class Board{
@@ -18,15 +19,19 @@ class Board{
     column: number;
     start: number;
     end: number;
+
     node: Node[];
     wall: number[];
     painter: Painter;
+    reset: Reset;
 
     leftclicked: boolean;
     startSelected: boolean;
     destinationSelected: boolean;
 
     disableButton: boolean;
+    algorithmID: number;
+    firstClick: boolean;
 
     sl: string;
     dl: string;
@@ -39,6 +44,8 @@ class Board{
         this.destinationSelected = false;
 
         this.disableButton = false;
+        this.algorithmID = 0;
+        this.firstClick = false;
 
         this.sl = "O";
         this.dl = "#";
@@ -49,6 +56,7 @@ class Board{
         this.end = 1200;
         this.node = [];
         this.painter = new Painter(); 
+        this.reset = new Reset();
         this.wall = Array.apply(null, Array(this.row*this.column)).map(Number.prototype.valueOf,1);         
         this.constructBoard();        
     }
@@ -116,15 +124,17 @@ class Board{
             if(this.disableButton)return;
 
             currentCell.onmousedown = (e) =>{
-
+                if(this.disableButton)return;
                 e.preventDefault();
 
                 if(this.leftclicked){
                     if(this.startSelected){
                         currentCell.innerHTML = this.sl;
+                        this.node[i].isSource = false;
                     }
                     else if(this.destinationSelected){
                         currentCell.innerHTML = this.dl;
+                        this.node[i].isDestination = false;
                     }
                     this.leftclicked = false;
                     return;
@@ -153,6 +163,8 @@ class Board{
             }
 
             currentCell.onmouseleave = () =>{
+                if(this.disableButton)return;
+
                 if(this.leftclicked){
                     if(this.startSelected || this.destinationSelected){
                         currentCell.innerHTML = "";
@@ -161,6 +173,12 @@ class Board{
                         }
                         else if(this.node[i].isDestination && this.startSelected){
                             currentCell.innerHTML = this.dl;
+                        }
+                        if(this.algorithmID > 0 && this.startSelected){
+                            this.node[i].isSource = false;
+                        }
+                        else if(this.algorithmID > 0 && this.destinationSelected){
+                            this.node[i].isDestination = false;
                         }
                     }
                     if(this.node[i].isWall){
@@ -173,6 +191,8 @@ class Board{
             }
 
             currentCell.onmouseenter = () => {
+                if(this.disableButton)return;
+
                 if(this.leftclicked){
                     if(!this.startSelected && !this.destinationSelected && (!this.node[i].isDestination && !this.node[i].isSource)){
                         this.wall[currentCell.toString()] = 0;
@@ -190,22 +210,55 @@ class Board{
                         currentCell.innerHTML = this.sl;
                         this.painter.paintOneNode(currentCell.id, 0);
 
+                        if(this.algorithmID > 0 && this.firstClick){
+                            this.node[i].isSource = true;
+                            this.start = i;
+                            if(this.node[i].isWall){
+                                this.node[i].isWall = false;
+                                this.reCompute();
+                                this.node[i].isWall = true;
+                            }else this.reCompute();   
+                        }
+
                     }
                     else if(this.destinationSelected){
                         currentCell.innerHTML = this.dl;
                         this.painter.paintOneNode(currentCell.id, 0);
+
+                        if(this.algorithmID > 0 && this.firstClick){
+                            this.node[i].isDestination = true;
+                            this.end = i;
+                            if(this.node[i].isWall){
+                                this.node[i].isWall = false;
+                                this.reCompute();
+                                this.node[i].isWall = true;
+                            }else this.reCompute();   
+                        }
                     }
                 }
             }
             currentCell.onmouseup = () => {
+
+                if(this.disableButton)return;
+
                 this.leftclicked = false;
                 if(this.destinationSelected && this.node[i].isSource){
                     currentCell.innerHTML = this.sl;
+                    this.node[i].isDestination = false;
+                    this.node[this.start].isSource = true;
+
                     document.getElementById(this.end.toString()).innerHTML = this.dl;
+                    this.node[this.end].isDestination = true;
+                    this.destinationSelected = false;
                 }
                 else if(this.startSelected && this.node[i].isDestination){
                     currentCell.innerHTML = this.dl;
+                    this.node[i].isSource = false;
+                    this.node[this.end].isDestination = true;
+
                     document.getElementById(this.start.toString()).innerHTML = this.sl;
+                    this.node[this.start].isSource = true;
+                    this.startSelected = false;
                 }
                 else if(this.destinationSelected){
                     this.node[i].isDestination = true;
@@ -220,14 +273,44 @@ class Board{
             }
         }
     }
+    async clearPath(){
+        for(let i = 0; i<this.row*this.column; i++){
+            this.node[i].visited = false;
+            this.node[i].parent = null;
+            if(!this.node[i].isWall){
+                this.painter.paintOneNode(i.toString(), 0);
+            }
+        }
+    }
+
+    async reCompute(){
+        this.clearPath();
+        switch(this.algorithmID){
+            case 1:
+                let bfs = new BreadthFirstSearch(this.start, this.end, this.column, this.row, this.node, this.painter);
+                bfs.fastbfs();
+                break;
+            case 2:
+                let dfs = new DepthFirstSearch(this.start, this.end, this.column, this.row, this.node, this.painter);
+                dfs.fastInitialiseDFS();
+                break;
+            case 3: 
+                let dijkstra = new Dijkstra(this.start, this.end, this.column, this.row, this.node, this.painter);
+                dijkstra.fastDijkstra();
+                break;
+            default:
+                console.log("chose the algorithm first");
+        }
+    }
 
     async defaultSetting(){
         this.start = this.defaultStart
         this.end = this.defaultEnd;
-       
+        this.node[this.start].isSource = true;
+        this.node[this.end].isDestination = true;
         document.getElementById(this.start.toString()).innerText = this.sl;
         document.getElementById(this.end.toString()).innerText = this.dl;
-
+        this.firstClick = false;
         this.painter.speed = 1;
     }
 
@@ -243,6 +326,8 @@ class Board{
             this.node[i].parent = null;
             this.node[i].visited = false;
             this.node[i].weight = false;
+            this.node[i].isSource = false;
+            this.node[i].isDestination = false;
         }
         this.defaultSetting();
     }
@@ -321,7 +406,13 @@ class Board{
 export default Board;
 
 /*
-fast algorithm search
+
+deal with the bugg 
+{
+    depth first start is acting weird 
+    also dijkstra 
+    they both acting like shit
+}
 disabled color
 animation
 code presentation

@@ -1,7 +1,7 @@
 import { addEmitHelper, textSpanIntersectsWithPosition } from 'typescript';
 import board from '../Board';
 import Painter from '../utilities/Painter';
-import Node from '../utilities/nodes';
+import Node from '../utilities/Nodes';
 
 class Recursive_Vertical{
    
