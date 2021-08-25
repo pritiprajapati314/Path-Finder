@@ -416,5 +416,6 @@ deal with the bugg
 disabled color
 animation
 code presentation
+also instruction drop box
 */
 
