@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Path finder</title>
+    <link rel="icon" href="images/faviconicon.png" type="image/x-icon">
     <link rel="stylesheet" href="index.css"> 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
-
+  
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href=""> <img src="logo.png" width="20" height="35">
+    <a class="navbar-brand" href=""> <i class="fas fa-map-marker-alt" style="font-size: 50px; color: rgb(57, 167, 201)"></i>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -19,7 +21,7 @@
     <div class="collapse navbar-collapse" id="navbarText">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <button class="btn btn-success my-2 my-sm-0" id="buttonFindPath">Search</button>
+          <button class="btn btn-success my-2 my-sm-0" id="buttonFindPath" style="background-color: rgb(57, 167, 201); border-color: rgb(57, 167, 201);">Search</button>
         </li>
         <li class="nav-item">
           <a class="nav-link" id="buttonAddWeight">Add Weight</a>
@@ -49,7 +51,7 @@
         <li class="nav-item">
           <a class="nav-link" id = "speedLable">Select Speed:</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" style="padding-top:12px">
             <input class="nav-link" id="speedSlider" type="range" min="1" max="100" value="5">
         </li>
 
@@ -63,26 +65,57 @@
     </div>
   </nav>
 
-
-  
-
-  
-
-
-
-
-
-
-
-
-
     <div class="d-flex justify-content-center" id="board">
       <div class="main">
         <table class="maze" id="maze"> 
         </table>
       </div>
 
-    </div>
+
+      
+
+      <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content" >
+          <span id="close" class="close">&times;</span>
+          <div class="container">
+            <h1 class="display-4 strong" style="text-align: center;"><i class="fas fa-map-marker-alt" style="font-size: 75px;"></i><b> PathFinder</b></h1>
+            <p style="font-size: 20px; text-align: center;">This application helps you visualise various pathfinding algorithm in action</p>
+              <img class="img-fluid" src="images/maze.jpg" >
+
+            <p class="display-4" style="text-align: center;">Getting Started...</p>
+            <img class="img-fluid" src="images/navbar.jpg" >
+            <div class="row">
+                <div class="col-md-4">
+
+                    <p style="font-size: 16px;">Just click and drag on the canvas and it will.. </p>
+                    <ul>
+                        <li>Make Walls appear or disappear</li>
+                        <li>Move source and destination to your preference.</li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4">
+                    <ul>
+                        <li>click on select a maze pattern to choose from options to build random mazes or other patterns</li>
+                        <li>click on select a algorithms to choose from options to find a path between source and destination.</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                  <ul>
+                      <li>click on add weight to randomly generate weights in the canvas to see its effect over different algorithm</li>
+                      <li>adjust speed according to your convenience.</li>
+                  </ul>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      
+      </div>
     <!-- <div class="board" id="board">
         <table class="maze" id="maze"> 
         </table>
